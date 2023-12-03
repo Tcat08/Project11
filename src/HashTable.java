@@ -5,14 +5,14 @@ import java.util.*;
 
 
 public class HashTable {
-    private Node[] array;
+    private Node[] nodeArray;
     private int size;
     private int[] keyToIndex;  // Added for key-to-index mapping
 
 
     public HashTable(int size) {
         this.size = size;
-        this.array = new Node[size];
+        this.nodeArray = new Node[size];
         this.keyToIndex = new int[size];
     }
 
@@ -20,9 +20,10 @@ public class HashTable {
         // A simple hash function
         int hash = 0;
 
-        for (int i = 0; i < key; i++) {
-            hash = ((31 * hash) + key) % size;
+        for (int i = 0 ; i < key; i++) {
+            hash = ((31 * hash) + key);
         }
+        hash = hash % size;
 
         return hash;
     }
@@ -32,17 +33,17 @@ public class HashTable {
         Node newNode = new Node(key, value);
 
         // Handle collision by chaining, not open addressing
-        if (array[index] == null) {
-            array[index] = newNode;
+        if (nodeArray[index] == null) {
+            nodeArray[index] = newNode;
         } else {
-            newNode.setNext(array[index]);
-            array[index] = newNode;
+            newNode.setNext(nodeArray[index]);
+            nodeArray[index] = newNode;
         }
     }
 
     public String get(int key) {
         int index = hashFunction(key);
-        Node current = array[index];
+        Node current = nodeArray[index];
 
         while (current != null) {
             if (current.getKey() == key) {
@@ -57,7 +58,7 @@ public class HashTable {
     public Set<Integer> keySet() {
         Set<Integer> keys = new HashSet<>();
 
-        for (Node node : array) {
+        for (Node node : nodeArray) {
             while (node != null) {
                 keys.add(node.getKey());
                 node = node.getNext();
@@ -73,7 +74,7 @@ public class HashTable {
 
     public Node getNodeAtIndex(int index, int position) {
         if (index >= 0 && index < size) {
-            Node current = array[index];
+            Node current = nodeArray[index];
 
             // Traverse the linked list until you reach the desired position
             for (int i = 0; i < position && current != null; i++) {
@@ -82,13 +83,14 @@ public class HashTable {
 
             return current;
         } else {
-            // Handle invalid index, for example, return null or throw an exception
+            // May handle invalid index here, for example, return null or throw an exception
             return null;
         }
     }
 
+    
     public int getKeyByValue(String value) {
-        for (Node node : array) {
+        for (Node node : nodeArray) {
             while (node != null) {
                 if (node.getValue().equals(value)) {
                     return node.getKey();

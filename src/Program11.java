@@ -3,7 +3,6 @@ import java.io.*;
 import java.io.IOException;
 
 import java.util.Set;
-import java.util.HashSet;
 
 public class Program11 {
 
@@ -18,7 +17,7 @@ public class Program11 {
 
     }
 
-    public String[] readAndProcessFile() { //option 3 includes String[]
+    public String readAndProcessFile() { //option 3 includes String[]
         StringBuilder processedContent = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFilePath))) {
             String line;
@@ -34,11 +33,11 @@ public class Program11 {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return processedContent.toString().trim().split("\\s+"); //option3 includes .split("\\s+")
+        return processedContent.toString().trim(); //option3 includes .split("\\s+")
     }
 
 
-    public void writeSortedStringToFile(String sortedString) { //Option 1 : writeProcessedContentToFile //Option 3: writeSortedStringToFile
+    public void writeProcessedContentToFile(String sortedString) { //Option 1 : writeProcessedContentToFile //Option 3: writeSortedStringToFile
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
             writer.write(sortedString);
         } catch (IOException e) {
@@ -48,33 +47,47 @@ public class Program11 {
 
 
     public static void main(String[] args) {
-        String inputFilePath = "C:\\Users\\Winter\\IdeaProjects\\Project11\\DraculaSample.txt";
+        String inputFilePath = "C:\\Users\\Winter\\IdeaProjects\\Project11\\DraculaInput.txt";
         String outputFilePath = "PlainDraculaOutput.txt"; //only needed for option 1
 
         Program11 textToPlainFormat = new Program11(inputFilePath, outputFilePath);
 
         // Step 1: Read the file and process its content
 
-        //String processedContent = textToPlainFormat.readAndProcessFile(); //for option 1 and 2
+        String processedContent = textToPlainFormat.readAndProcessFile(); //for option 1 and 2
 
-        String[] wordsArray = textToPlainFormat.readAndProcessFile(); //for option 3
+        //String[] wordsArray = textToPlainFormat.readAndProcessFile(); //Actual option 3
 
-        // Step 2: Write the processed content to the output
+        // Step 2: Insert the words into a RB search tree
+        RedBlackTree rbt = textToPlainFormat.getRedBlackTree(processedContent);
 
-        //textToPlainFormat.writeProcessedContentToFile(processedContent); //option 1
+        // Optional Step 2 or step 4: Write the processed content to the output
 
-        //System.out.println(processedContent); //option 2
+        //textToPlainFormat.writeProcessedContentToFile(processedContent); //Actual option 1
 
-        String words = ""; // Example words
+        //System.out.println(processedContent); //Actual option 2
+
+        // Step 3: Perform post-order traversal to generate a sorted string
+        String sortedString = rbt.inorder();
+
+        //Step 4:
+        //System.out.println(sortedString);
+        //textToPlainFormat.writeProcessedContentToFile(sortedString);
+
+        String words = ""; // Example words can be manually added to test (for option 3)
 
 
-        for (String word : wordsArray) {
+        /*
+        for (String word : wordsArray) { //for option 3
             words = words + " " + word;
         }
+        */
 
-        HashTable hashTable = getHashTable(words);
+        HashTable hashTable = getHashTable(sortedString);
 
         Set<Integer> keys = hashTable.keySet();
+
+        // Insert values into the hash table...
 
         System.out.println("Key\t\tValue\t\t\tLocation");
         for (int key : keys) {
@@ -90,12 +103,23 @@ public class Program11 {
             else  {System.out.println(key + "\t" + hashTable.get(key) + "\t\t" + hashTable.hashFunction(key));}
         }
 
-        // Insert values into the hash table...
+
 
         // Retrieve a Node by index
-        int indexToRetrieve = 63;
-        int positionInList = 0;
+        int indexToRetrieve = 211; //index will be searched for and how many times it appears using RedBlackTree method
+        int positionInList = 0; //If there is a collision, setting this to 1 and up will find the next node on the linked list chain (test when λ is close to 1)
         Node retrievedNode = hashTable.getNodeAtIndex(indexToRetrieve, positionInList);
+
+        // Predefined word to search
+        String wordToSearch = retrievedNode.getValue(); // Testing search. Replace with the word you want to search
+        RBTNode result = rbt.searchTree(wordToSearch);
+
+        if (result != null) {
+            System.out.println("Found: " + result.getData()); //if search word is found
+            System.out.println("[" + result.getData() + "]" + " exists " + rbt.getWordCount(wordToSearch) + " time(s) ");
+        } else {
+            System.out.println("Key not found."); //if search word is not found
+        }
 
         if (retrievedNode != null) {
             System.out.println("Node at index " + indexToRetrieve + ", position " + positionInList +
@@ -104,12 +128,16 @@ public class Program11 {
             System.out.println("Invalid index or no Node at index " + indexToRetrieve);
         }
 
+        //Retrieve a Key by value
+
+
+
 
 
     }
 
     private static HashTable getHashTable(String words) {
-        HashTable ht = new HashTable(127);
+        HashTable ht = new HashTable(52127);
         String[] wordArray = words.split("\\s+");
 
         for (String word : wordArray) {
@@ -120,10 +148,19 @@ public class Program11 {
         return ht;
     }
 
+    private RedBlackTree getRedBlackTree(String words) {
+        RedBlackTree rbt = new RedBlackTree();
+        String[] wordArray = words.split("\\s+");
+        for (String word : wordArray) {
+            rbt.insert(word);
+        }
+        return rbt;
+    }
+
     private static int calculateKey(String word) {
         int key = 0;
         for (char c : word.toCharArray()) {
-            key += (int) c;
+            key = (key * 2) + (int) c; // Using a prime number for better distribution (it has errors with certain integers)
         }
         return key;
     }
