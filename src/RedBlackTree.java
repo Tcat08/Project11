@@ -1,3 +1,10 @@
+/*
+Name: Connor Byers
+Prof: Blanche Cohen
+Class: CS2050
+Dectription: RedBlackTree from Program 9
+ */
+
 // Red Black Tree implementation in Java
 // data structure that represents a node in the tree
 
@@ -7,7 +14,7 @@ public class RedBlackTree {
     private RBTNode TNULL;
     public final int RED = 1;
     public final int BLACK = 0;
-    int nodeCount = 0;
+    int nodeCount = 1;
 
     private String preOrderHelper(RBTNode node) {
         StringBuilder result = new StringBuilder();

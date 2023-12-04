@@ -1,3 +1,23 @@
+/*
+Name: Connor Byers
+Prof: Blanche Cohen
+Class: CS2050
+Dectription: This is the main Program of the assignment project to run. There are all of the necessary tools
+to find any value, key, or Index given any of them to see if it exists in Dracula.txt at different Table sizes for the table.
+First it reads the file from the computer and processes it, then it sorts it in the RedBlackTree, then it sets a String as
+the in-order traversal and starting with each word, creates a key based on the characters of the word. Then the key is hashed into
+a value based on a predetermined side of the table (the closest prime number to a number 30 percent than the larger load factor;
+the number of existing unique words)
+Then you can either search the table by word, index, or key to see if it exists and how many times
+Collisions are resolved by chaining (should be minimized since load factor is close to .7 for saving space too)
+but you can also search based on Index and position on the list if there is more than one word at an index
+
+There's also 3 options for
+1: Writing an output file (only for sorted file now)
+2: Assigning sorted file to print or put on hash table (used)
+3: Making an array of the words (commented out too)
+
+ */
 
 import java.io.*;
 import java.io.IOException;
@@ -47,8 +67,8 @@ public class Program11 {
 
 
     public static void main(String[] args) {
-        String inputFilePath = "C:\\Users\\Winter\\IdeaProjects\\Project11\\DraculaInput.txt";
-        String outputFilePath = "PlainDraculaOutput.txt"; //only needed for option 1
+        String inputFilePath = "C:\\Users\\cebce\\IdeaProjects\\Project11\\DraculaInput.txt";
+        String outputFilePath = "PlainDraculaSample.txt"; //only needed for option 1
 
         Program11 textToPlainFormat = new Program11(inputFilePath, outputFilePath);
 
@@ -89,24 +109,11 @@ public class Program11 {
 
         // Insert values into the hash table...
 
-        System.out.println("Key\t\tValue\t\t\tLocation");
-        for (int key : keys) {
-
-            if ((hashTable.get(key)).length() <= 5 && key<800 ) {
-                System.out.println(key + "\t\t" + hashTable.get(key) + "\t\t\t\t" + hashTable.hashFunction(key));
-            }
-
-            else if ((hashTable.get(key)).length() <= 10 && key<1000) {
-                System.out.println(key + "\t\t" + hashTable.get(key) + "\t\t\t" + hashTable.hashFunction(key));
-            }
-
-            else  {System.out.println(key + "\t" + hashTable.get(key) + "\t\t" + hashTable.hashFunction(key));}
-        }
 
 
 
         // Retrieve a Node by index
-        int indexToRetrieve = 211; //index will be searched for and how many times it appears using RedBlackTree method
+        int indexToRetrieve = 11791; //index will be searched for and how many times it appears using RedBlackTree method
         int positionInList = 0; //If there is a collision, setting this to 1 and up will find the next node on the linked list chain (test when λ is close to 1)
         Node retrievedNode = hashTable.getNodeAtIndex(indexToRetrieve, positionInList);
 
@@ -137,7 +144,7 @@ public class Program11 {
     }
 
     private static HashTable getHashTable(String words) {
-        HashTable ht = new HashTable(52127);
+        HashTable ht = new HashTable(14897);
         String[] wordArray = words.split("\\s+");
 
         for (String word : wordArray) {
@@ -160,7 +167,7 @@ public class Program11 {
     private static int calculateKey(String word) {
         int key = 0;
         for (char c : word.toCharArray()) {
-            key = (key * 2) + (int) c; // Using a prime number for better distribution (it has errors with certain integers)
+            key = (key * 2 ) + (int) c;
         }
         return key;
     }

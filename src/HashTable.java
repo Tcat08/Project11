@@ -1,4 +1,24 @@
+/*
+Name: Connor Byers
+Prof: Blanche Cohen
+Class: CS2050
+Dectription: A hash table must be constructed with a size in mind, there is nothing for increasing or decreasing
+the size when a load factor is reached, however
 
+*The most important method is put, which calculates an Index for each value based on the size of the table
+and calculated from the key
+
+get will return a value based on the key if it exists
+key set creates an array of the keys so everything on the table can be accessed and printed if need be
+If the key is not an integer, it can generically be changed (this uses a utility, but it seemed like
+the most efficient way to make a set of keys and either access the value or index from there)
+
+*getNodeAtIndex is also very important; it is used to find both the value and key when given
+only the index as argument, which is exactly what I'm trying to do with this program
+
+you can also get key by value, but that should already be set in node since I'm starting with String values
+from the Dracula file, so that's unused
+ */
 
 import java.util.*;
 
@@ -20,10 +40,9 @@ public class HashTable {
         // A simple hash function
         int hash = 0;
 
-        for (int i = 0 ; i < key; i++) {
-            hash = ((31 * hash) + key);
+        for (int i = 0; i < key; i++) {
+            hash = ((31 * hash) + key) % size;
         }
-        hash = hash % size;
 
         return hash;
     }
@@ -84,7 +103,8 @@ public class HashTable {
             return current;
         } else {
             // May handle invalid index here, for example, return null or throw an exception
-            return null;
+           return null;
+
         }
     }
 

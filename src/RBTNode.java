@@ -1,4 +1,9 @@
-
+/*
+Name: Connor Byers
+Prof: Blanche Cohen
+Class: CS2050
+Dectription: Node for RedBlackTree from Program9
+ */
 
 public class RBTNode {
     String data; // holds the key

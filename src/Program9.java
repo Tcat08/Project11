@@ -1,4 +1,10 @@
-
+/*
+Name: Connor Byers
+Prof: Blanche Cohen
+Class: CS2050
+Dectription: Program 9 (not actually needed for Program11,
+but it proves that it uses the same RedBlackTree to sort)
+ */
 
 
 import java.io.*;
